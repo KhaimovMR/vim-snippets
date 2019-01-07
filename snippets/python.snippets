@@ -179,7 +179,7 @@ snippet "
 	"""
 # assertions
 snippet a=
-	self.assertEqual(${0}, ${1})
+	self.assertEqual(${1}, ${2})${0}
 # test function/method
 snippet test
 	def test_${1:description}(${2:`indent('.') ? 'self' : ''`}):
@@ -232,18 +232,18 @@ snippet pargs
 # glog = get log
 snippet glog
 	import logging
-	LOGGER = logging.getLogger(${0:__name__})
+	LOGGER = logging.getLogger(${1:__file__})${0}
 snippet le
-	LOGGER.error(${0:msg})
+	LOGGER.error(${1:msg})${0}
 # conflict with lambda=ld, therefor we change into Logger.debuG
 snippet lg
-	LOGGER.debug(${0:msg})
+	LOGGER.debug(${1:msg})${0}
 snippet lw
-	LOGGER.warning(${0:msg})
+	LOGGER.warning(${1:msg})${0}
 snippet lc
-	LOGGER.critical(${0:msg})
+	LOGGER.critical(${1:msg})${0}
 snippet li
-	LOGGER.info(${0:msg})
+	LOGGER.info(${1:msg})${0}
 snippet epydoc
 	"""${1:Description}
 
