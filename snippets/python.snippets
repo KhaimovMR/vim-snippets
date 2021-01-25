@@ -45,8 +45,9 @@ snippet awith
 snippet cl
 	class ${1:ClassName}(${2:object}):
 		"""${3:docstring for $1}"""
+
 		def __init__(self, ${4:arg}):
-			${5:super($1, self).__init__()}
+			${5:super().__init__($4)}
 			self.$4 = $4
 			${0}
 # New Function
