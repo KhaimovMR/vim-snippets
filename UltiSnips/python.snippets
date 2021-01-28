@@ -145,13 +145,14 @@ def format_return(style):
 		return "Returns: TODO"
 
 
-def write_docstring_args(args, snip):
+def write_docstring_args(args, snip, indentation):
 	if not args:
-		snip.rv += '{0}'.format(triple_quotes(snip))
+		snip >> indentation
+		snip += '{0}'.format(triple_quotes(snip))
 		return
 
-	snip.rv += '\n' + snip.mkline('', indent='')
-
+	snip += ''
+	snip >> indentation
 	style = get_style(snip)
 
 	if style == GOOGLE:
@@ -207,7 +208,6 @@ def write_init_body(args, parents, snip):
 
 	if parents:
 		snip += "super().__init__(self)"
-		snip.rv += '\n' + snip.mkline('', indent='')
 
 	for arg in args:
 		snip += "self._%s = %s" % (arg, arg)
@@ -227,12 +227,9 @@ def write_function_docstring(t, snip):
 	:param t: The values of the placeholders
 	:param snip: UltiSnips.TextObjects.SnippetUtil object instance
 	"""
-	snip.rv = ""
-	snip >> 1
-
 	args = get_args(t[2])
 	if args:
-		write_docstring_args(args, snip)
+		write_docstring_args(args, snip, 1)
 
 	style = get_style(snip)
 
@@ -242,7 +239,7 @@ def write_function_docstring(t, snip):
 		snip += 'TODO'
 	else:
 		snip += format_return(style)
-	snip.rv += '\n' + snip.mkline('', indent='')
+
 	snip += triple_quotes(snip)
 
 def get_dir_and_file_name(snip):
@@ -256,18 +253,14 @@ endglobal
 
 snippet class "class with docstrings" b
 class ${1:MyClass}(${2:object}):
-	`!p snip.rv = triple_quotes(snip)`${3:TODO: to be defined.}`!p snip.rv = triple_quotes(snip)`
-
+	`!p snip.rv = triple_quotes(snip)`${3:TODO: to be defined.}`!p snip.rv = triple_quotes(snip) + "\n"`
 	def __init__(self$4):
 		`!p snip.rv = triple_quotes(snip)`
-		${5:TODO: to be defined.}
-		`!p
-snip.rv = ""
-snip >> 2
-
+		${5:TODO: to be defined.}`!p
 args = get_args(t[4])
+write_docstring_args(args, snip, 2)
 
-write_docstring_args(args, snip)
+
 if args:
 	snip += '{0}'.format(triple_quotes(snip))
 
@@ -294,7 +287,7 @@ snip >> 2
 
 args = get_args(t[4])
 
-write_docstring_args(args, snip)
+write_docstring_args(args, snip, 2)
 if args:
 	snip.rv += '\n' + snip.mkline('', indent='')
 	snip += triple_quotes(snip)
@@ -495,7 +488,8 @@ snippet def "function with docstrings" b
 def ${1:function}(`!p
 if snip.indent:
 	snip.rv = 'self' + (", " if len(t[2]) else "")`${2:arg1}):
-	`!p snip.rv = triple_quotes(snip)`${4:TODO: Docstring for $1.}`!p
+	`!p snip.rv = triple_quotes(snip)`
+	${4:TODO: Docstring for $1.}`!p
 write_function_docstring(t, snip) `
 	${5:${VISUAL:pass}}
 endsnippet
@@ -506,7 +500,8 @@ snippet defc "class method with docstrings" b
 def ${1:function}(`!p
 if snip.indent:
 	snip.rv = 'cls' + (", " if len(t[2]) else "")`${2:arg1}):
-	`!p snip.rv = triple_quotes(snip)`${4:TODO: Docstring for $1.}`!p
+	`!p snip.rv = triple_quotes(snip)`
+	${4:TODO: Docstring for $1.}`!p
 write_function_docstring(t, snip) `
 	${5:${VISUAL:pass}}
 endsnippet
@@ -515,7 +510,8 @@ endsnippet
 snippet defs "static method with docstrings" b
 @staticmethod
 def ${1:function}(${2:arg1}):
-	`!p snip.rv = triple_quotes(snip)`${4:TODO: Docstring for $1.}`!p
+	`!p snip.rv = triple_quotes(snip)`
+	${4:TODO: Docstring for $1.}`!p
 write_function_docstring(t, snip) `
 	${5:${VISUAL:pass}}
 endsnippet
